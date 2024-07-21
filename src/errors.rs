@@ -44,6 +44,24 @@ impl fmt::Display for RustcErrorKind {
     }
 }
 
+#[derive(Debug)]
+pub struct Error {
+    pub line_num: usize,
+    /// What kind of message we expect (e.g., warning, error, suggestion).
+    /// `None` if not specified or unknown message kind.
+    pub kind: Option<RustcErrorKind>,
+    pub msg: String,
+    /// The error code, if any.
+    pub error_code: Option<String>,
+}
+
+#[derive(PartialEq, Debug)]
+enum WhichLine {
+    ThisLine,
+    FollowPrevious(usize),
+    AdjustBackward(usize),
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
