@@ -91,32 +91,6 @@ impl fmt::Display for Error {
                 format!(".{} ", self.relative_line_num)
             },
         )
-        // let error_code = self.error_code.as_ref().map_or("", |code| &code[..]);
-        // write!(
-        //     f,
-        //     "// {{ {} \"{}{}\" \"\" {{ target *-*-* }} {}}}",
-        //     match &self.kind {
-        //         Some(kind) => match kind {
-        //             RustcErrorKind::Help => "help",
-        //             RustcErrorKind::Error => "dg-error",
-        //             RustcErrorKind::Note => "dg-note",
-        //             RustcErrorKind::Suggestion => "suggestion",
-        //             RustcErrorKind::Warning => "dg-warning",
-        //         },
-        //         None => "dg-error",
-        //     },
-        //     self.msg,
-        //     if !error_code.is_empty() {
-        //         format!(" .{}.", error_code)
-        //     } else {
-        //         error_code.to_owned()
-        //     },
-        //     if self.relative_line_num == 0 {
-        //         "".to_owned()
-        //     } else {
-        //         format!(".{} ", self.relative_line_num)
-        //     },
-        // )
     }
 }
 
