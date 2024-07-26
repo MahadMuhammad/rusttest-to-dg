@@ -4,6 +4,7 @@ use anyhow::Result;
 use regex::Regex;
 
 use crate::errors;
+use crate::header::parse_edition_directive;
 
 /// This function takes the rust code as input
 /// and returns the code with DejaGnu directive
@@ -14,8 +15,19 @@ pub fn transform_code(code: &str, stderr_file: Option<&str>) -> Result<String> {
     let mut line_num = 1;
     for line in code.lines() {
         let mut new_line = line.to_string();
+        let mut is_add_directive = false;
+
+        if new_line.starts_with("//@") {
+            // remove after "//@ " and return the rest of the line
+            new_line = parse_edition_directive(new_line.trim_start_matches("//@ "), "edition");
+            is_add_directive = true;
+        }
+
         // TODO: This is not the efficient way to find respective line number
         for error in errors.iter() {
+            if is_add_directive {
+                break;
+            }
             if (error.line_num as i32 - error.relative_line_num) != line_num {
                 continue;
             }
