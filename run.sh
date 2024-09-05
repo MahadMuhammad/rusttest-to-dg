@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
+
 set -e
 # For Debugging
 # set -x
 
-export GCCRS_PATH=~/Desktop/gccrs
 # Check if GCCRS_PATH is set
 if [ -z "$GCCRS_PATH" ]; then
   echo "Error: GCCRS_PATH environment variable is not set."
