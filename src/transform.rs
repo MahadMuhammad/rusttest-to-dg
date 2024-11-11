@@ -1,5 +1,5 @@
 //! This module contains the code transformation logic.
-
+/// The known directives are copied from https://github.com/rust-lang/rust/blob/master/src/tools/compiletest/src/command-list.rs
 use {
     crate::{
         errors,
@@ -34,7 +34,9 @@ pub fn transform_code(code: &str, stderr_file: Option<&str>) -> Result<String> {
             // TODO: This is not the efficient way to find respective line number
             for error in errors.iter() {
                 // Checking the original line number
-                if (error.line_num as i32 - error.relative_line_num) != line_num as i32 {
+                if (i32::try_from(error.line_num)? - error.relative_line_num)
+                    != i32::try_from(line_num)?
+                {
                     continue;
                 }
                 // In rustc test suites, the error directive is
