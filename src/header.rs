@@ -39,12 +39,11 @@ fn add_additional_options(code: &str, line_number: usize) -> Option<HeaderLine> 
 
     if let Some((_header_revision, non_revisioned_directive_line)) = line_directive(comment, code) {
         // The non_revisioned_directive_line is the directive without the "//@" prefix
-        let edition = parse_edition(non_revisioned_directive_line);
-        edition.as_ref()?;
+        let edition = parse_edition(non_revisioned_directive_line)?;
         Some(HeaderLine {
             line_number: line_number + 1, // 1 based-indexed instead of zero based
             _directive: "edition",
-            dejagnu_header: to_dejagnu_edition(edition.unwrap().as_str()),
+            dejagnu_header: to_dejagnu_edition(edition.as_str()),
         })
     } else {
         None
@@ -61,11 +60,7 @@ fn line_directive<'line>(
         .trim_start();
 
     if let Some(after_open_bracket) = after_comment.strip_prefix('[') {
-        let Some((line_revision, directive)) = after_open_bracket.split_once(']') else {
-            panic!(
-                "malformed condition directive: expected `{comment}[foo]`, found `{original_line}`"
-            )
-        };
+        let (line_revision, directive) = after_open_bracket.split_once(']')?;
 
         Some((Some(line_revision), directive.trim_start()))
     } else {

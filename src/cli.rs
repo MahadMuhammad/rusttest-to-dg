@@ -72,8 +72,8 @@ mod tests {
         assert_eq!(args.stderr_file, Some(path::PathBuf::from("test.stderr")));
     }
 
-    /// clap reports most development errors as `debug_assert!`s
-    /// See this for more details, [here](https://docs.rs/clap/4.5.15/clap/_derive/_tutorial/chapter_4/index.html)
+    // clap reports most development errors as `debug_assert!`s
+    // See this for more details, [here](https://docs.rs/clap/4.5.15/clap/_derive/_tutorial/chapter_4/index.html)
     #[test]
     fn debug_args() {
         use clap::CommandFactory;

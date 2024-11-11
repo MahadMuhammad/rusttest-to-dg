@@ -5,7 +5,19 @@ use {
     std::{fmt, str::FromStr},
 };
 
-// https://docs.rs/once_cell/1.19.0/once_cell/#lazily-compiled-regex
+/// Macro used to lazily create a new regex the first time it is invoked.
+///
+/// # Arguments
+///
+/// * `re` - The regex literal string used to build the automaton
+///
+/// # Example
+///
+/// ```rust
+/// assert!(regex!(r"\w").is_match(" "));
+/// ```
+///
+/// Taken from here https://docs.rs/once_cell/1.20.2/once_cell/index.html#lazily-compiled-regex
 #[macro_export]
 macro_rules! regex {
     ($re:literal $(,)?) => {{
@@ -72,14 +84,14 @@ pub struct Error {
     /// What kind of message we expect (e.g., warning, error, suggestion).
     /// `None` if not specified or unknown message kind.
     pub kind: Option<RustcErrorKind>,
-    ///Note: if we are loading this from rustc source file, this might be incomplete
+    /// Note: if we are loading this from rustc source file, this might be incomplete
     pub msg: String,
     pub error_code: Option<String>,
 }
 
 impl fmt::Display for Error {
     /// Formats the `Error` for display according to `DejaGnu` format
-    /// See `DejaGnu` documentation [here](https://gcc.gnu.org/onlinedocs/gccint/testsuites/directives-used-within-dejagnu-tests/syntax-and-descriptions-of-test-directives.html)
+    /// See [`DejaGnu` documentation](https://gcc.gnu.org/onlinedocs/gccint/testsuites/directives-used-within-dejagnu-tests/syntax-and-descriptions-of-test-directives.html)
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use RustcErrorKind::*;
 
@@ -87,11 +99,10 @@ impl fmt::Display for Error {
 
         let error_type = match &self.kind {
             Some(Help) => "help",
-            Some(Error) => "dg-error",
             Some(Note) => "dg-note",
             Some(Suggestion) => "suggestion",
             Some(Warning) => "dg-warning",
-            None => "dg-error",
+            Some(Error) | None => "dg-error",
         };
 
         let error_code = if error_code.is_empty() {

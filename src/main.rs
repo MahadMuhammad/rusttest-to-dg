@@ -1,5 +1,3 @@
-//! The main entry point of the program.
-
 use {
     anyhow::{Context, Result},
     clap::Parser,
