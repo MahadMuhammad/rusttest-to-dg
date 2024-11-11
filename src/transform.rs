@@ -17,6 +17,9 @@ pub fn transform_code(code: &str, stderr_file: Option<&str>) -> Result<String> {
     let mut new_code = String::new();
     let additional_options = parse_additional_options(code);
 
+    // regular expression to capture the error with revision directive
+    let captures_regex = regex!(r"//(?:\[(?P<revs>[\w\-,]+)])?~(?P<adjust>\||\^*)");
+
     let mut line_num = 1;
     // finding the respective line number and adding the error code
     for line in code.lines() {
@@ -49,7 +52,7 @@ pub fn transform_code(code: &str, stderr_file: Option<&str>) -> Result<String> {
                     new_line = format!("{}", error);
                 } else {
                     // For the error on the same line, we need to add error message at the end of the line
-                    let captures = regex!(r"//(?:\[(?P<revs>[\w\-,]+)])?~(?P<adjust>\||\^*)")
+                    let captures = captures_regex
                         .captures(line)
                         .expect("Could not find the error directive");
 
